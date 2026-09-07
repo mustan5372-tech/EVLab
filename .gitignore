@@ -4,6 +4,7 @@ node_modules/
 out/
 build/
 dist/
+.vercel/
 
 # Environment Variables
 .env
@@ -30,3 +31,5 @@ coverage/
 .vscode/
 .idea/
 *.tsbuildinfo
+
+.vercel

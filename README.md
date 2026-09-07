@@ -8,6 +8,9 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS_3.4-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 [![Vitest](https://img.shields.io/badge/Vitest-Tested-green?style=flat&logo=vitest)](https://vitest.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Vercel: Live](https://img.shields.io/badge/Vercel-evlab.vercel.app-black?style=flat&logo=vercel)](https://evlab.vercel.app)
+
+**Live Production URL:** [https://evlab.vercel.app](https://evlab.vercel.app)
 
 ---
 
