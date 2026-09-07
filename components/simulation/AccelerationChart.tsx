@@ -62,12 +62,13 @@ export function AccelerationChart({ acceleration }: AccelerationChartProps) {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#121824',
-                borderColor: '#24334E',
+                backgroundColor: 'var(--surface-100)',
+                borderColor: 'var(--border-color)',
                 borderRadius: '16px',
                 fontSize: '12px',
-                boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)',
+                color: 'var(--foreground)',
               }}
+              itemStyle={{ color: 'var(--foreground)' }}
               formatter={(value: any, name: string) => {
                 if (name === 'Vehicle Speed') return [`${value} km/h`, name];
                 if (name === 'Distance Covered') return [`${value} m`, name];

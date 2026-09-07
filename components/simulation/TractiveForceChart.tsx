@@ -62,11 +62,13 @@ export function TractiveForceChart({ acceleration }: TractiveForceChartProps) {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#121824',
-                borderColor: '#24334E',
+                backgroundColor: 'var(--surface-100)',
+                borderColor: 'var(--border-color)',
                 borderRadius: '16px',
                 fontSize: '12px',
+                color: 'var(--foreground)',
               }}
+              itemStyle={{ color: 'var(--foreground)' }}
               formatter={(value: any, name: string) => {
                 if (name === 'Tractive Force') return [`${value} N`, name];
                 if (name === 'Aero Drag Force') return [`${value} N`, name];

@@ -144,16 +144,16 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between p-3 rounded-2xl bg-surface-200 border border-border">
                 <div>
                   <div className="font-bold text-foreground">Theme Mode</div>
-                  <div className="text-slate-400 text-[11px]">Dark OLED optimized high-contrast UI</div>
+                  <div className="text-slate-500 dark:text-slate-400 text-[11px]">Toggle between Dark OLED and Clean Light UI</div>
                 </div>
-                <div className="flex items-center gap-1 bg-surface-300 p-1 rounded-xl">
+                <div className="flex items-center gap-1 bg-surface-200 border border-border p-1 rounded-xl">
                   <button
                     type="button"
                     onClick={() => updatePreferences({ theme: 'dark' })}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                       preferences.theme === 'dark'
                         ? 'bg-electric-500 text-slate-950 shadow-sm'
-                        : 'text-slate-400 hover:text-white'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-foreground'
                     }`}
                   >
                     <Moon className="w-3.5 h-3.5" />
@@ -162,10 +162,10 @@ export default function SettingsPage() {
                   <button
                     type="button"
                     onClick={() => updatePreferences({ theme: 'light' })}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                       preferences.theme === 'light'
                         ? 'bg-electric-500 text-slate-950 shadow-sm'
-                        : 'text-slate-400 hover:text-white'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-foreground'
                     }`}
                   >
                     <Sun className="w-3.5 h-3.5" />

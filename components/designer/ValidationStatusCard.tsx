@@ -86,10 +86,10 @@ export function ValidationStatusCard() {
                     {item.category}
                   </span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">{item.summary}</p>
-                <p className="text-[11px] text-slate-400 leading-relaxed">{item.details}</p>
+                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{item.summary}</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">{item.details}</p>
                 {item.recommendation && (
-                  <p className="text-[11px] text-amber-300 font-medium pt-1">
+                  <p className="text-[11px] text-amber-600 dark:text-amber-300 font-medium pt-1">
                     💡 Recommendation: {item.recommendation}
                   </p>
                 )}

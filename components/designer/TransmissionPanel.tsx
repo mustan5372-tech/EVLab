@@ -91,8 +91,8 @@ export function TransmissionPanel() {
 
         {/* Regenerative Braking Mode Selection */}
         <div className="space-y-2 pt-2 border-t border-border/60">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
-            <RefreshCw className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
+            <RefreshCw className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
             <span>Regenerative Braking Calibration</span>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -103,12 +103,12 @@ export function TransmissionPanel() {
                 onClick={() => setRegenMode(rm.mode)}
                 className={`p-3 rounded-2xl text-left border transition-all duration-150 cursor-pointer ${
                   currentRegen === rm.mode
-                    ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300'
-                    : 'bg-surface-200 border-border text-slate-400 hover:text-slate-200'
+                    ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-600 dark:text-emerald-300'
+                    : 'bg-surface-200 border-border text-slate-600 dark:text-slate-400 hover:text-foreground'
                 }`}
               >
                 <div className="text-xs font-bold">{rm.label}</div>
-                <div className="text-[10px] text-slate-400 line-clamp-2 mt-1 leading-snug">{rm.desc}</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-1 leading-snug">{rm.desc}</div>
               </button>
             ))}
           </div>

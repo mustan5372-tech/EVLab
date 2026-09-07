@@ -10,16 +10,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: "rgb(var(--background-rgb) / <alpha-value>)",
+        foreground: "rgb(var(--foreground-rgb) / <alpha-value>)",
         surface: {
-          50: "var(--surface-50)",
-          100: "var(--surface-100)",
-          200: "var(--surface-200)",
-          300: "var(--surface-300)",
-          elevated: "var(--surface-elevated)",
+          50: "rgb(var(--surface-50-rgb) / <alpha-value>)",
+          100: "rgb(var(--surface-100-rgb) / <alpha-value>)",
+          200: "rgb(var(--surface-200-rgb) / <alpha-value>)",
+          300: "rgb(var(--surface-300-rgb) / <alpha-value>)",
+          elevated: "rgb(var(--surface-elevated-rgb) / <alpha-value>)",
         },
-        border: "var(--border-color)",
+        border: "rgb(var(--border-color-rgb) / <alpha-value>)",
         electric: {
           50: "#ECFDFF",
           100: "#CFF9FE",

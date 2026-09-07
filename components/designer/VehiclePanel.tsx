@@ -89,7 +89,7 @@ export function VehiclePanel() {
 
           {/* Driven Wheels */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-slate-300">Drivetrain Architecture</label>
+            <label className="text-xs font-medium text-slate-700 dark:text-slate-300">Drivetrain Architecture</label>
             <div className="grid grid-cols-3 gap-2">
               {(['fwd', 'rwd', 'awd'] as DrivenWheels[]).map((dw) => (
                 <button
@@ -99,14 +99,14 @@ export function VehiclePanel() {
                   className={`py-2 rounded-2xl text-xs font-bold uppercase transition-all duration-150 border ${
                     v.drivenWheels === dw
                       ? 'bg-electric-500/15 border-electric-500/40 text-electric-400'
-                      : 'bg-surface-200 border-border text-slate-400 hover:text-slate-200'
+                      : 'bg-surface-200 border-border text-slate-600 dark:text-slate-400 hover:text-foreground'
                   }`}
                 >
                   {dw}
                 </button>
               ))}
             </div>
-            <p className="text-[11px] text-slate-400">Affects max traction limit under hard acceleration.</p>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">Affects max traction limit under hard acceleration.</p>
           </div>
         </div>
 

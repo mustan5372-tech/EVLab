@@ -205,11 +205,13 @@ export default function ComparisonPage() {
                 <YAxis stroke="#64748B" fontSize={11} tickLine={false} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#121824',
-                    borderColor: '#24334E',
+                    backgroundColor: 'var(--surface-100)',
+                    borderColor: 'var(--border-color)',
                     borderRadius: '16px',
                     fontSize: '12px',
+                    color: 'var(--foreground)',
                   }}
+                  itemStyle={{ color: 'var(--foreground)' }}
                 />
                 <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
                 {comparisonData.map((d, idx) => (

@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root,
+html.dark {
   --background: #090D14;
   --foreground: #F1F5F9;
   --surface-50: #0E1420;
@@ -15,21 +16,48 @@
   --text-secondary: #94A3B8;
   --text-muted: #64748B;
   --accent-electric: #00D2FF;
+
+  --background-rgb: 9 13 20;
+  --foreground-rgb: 241 245 249;
+  --surface-50-rgb: 14 20 32;
+  --surface-100-rgb: 19 27 43;
+  --surface-200-rgb: 27 38 59;
+  --surface-300-rgb: 36 51 78;
+  --surface-elevated-rgb: 22 32 50;
+  --border-color-rgb: 33 45 64;
+  color-scheme: dark;
 }
 
-.light {
-  --background: #F4F6F9;
+html.light,
+:root.light {
+  --background: #F8FAFC;
   --foreground: #0F172A;
   --surface-50: #FFFFFF;
-  --surface-100: #F8FAFC;
-  --surface-200: #EEF2F6;
-  --surface-300: #E2E8F0;
+  --surface-100: #FFFFFF;
+  --surface-200: #E2E8F0;
+  --surface-300: #CBD5E1;
   --surface-elevated: #FFFFFF;
   --border-color: #E2E8F0;
   --text-primary: #0F172A;
   --text-secondary: #475569;
-  --text-muted: #94A3B8;
+  --text-muted: #64748B;
   --accent-electric: #0284C7;
+
+  --background-rgb: 248 250 252;
+  --foreground-rgb: 15 23 42;
+  --surface-50-rgb: 255 255 255;
+  --surface-100-rgb: 255 255 255;
+  --surface-200-rgb: 226 232 240;
+  --surface-300-rgb: 203 213 225;
+  --surface-elevated-rgb: 255 255 255;
+  --border-color-rgb: 226 232 240;
+  color-scheme: light;
+}
+
+/* User-agent form control base overrides to eliminate default white input box */
+input, select, textarea {
+  background-color: var(--surface-200);
+  color: var(--foreground);
 }
 
 body {
@@ -39,6 +67,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Tabular numbers for engineering values */

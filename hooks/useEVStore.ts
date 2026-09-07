@@ -68,6 +68,13 @@ export const useEVStore = create<EVStoreState>((set, get) => ({
     const prefs = loadUserPreferences();
     const sim = runFullSimulation(config);
 
+    if (typeof document !== 'undefined') {
+      const theme = prefs.theme || 'dark';
+      document.documentElement.classList.remove('light', 'dark');
+      document.documentElement.classList.add(theme);
+      document.documentElement.style.colorScheme = theme;
+    }
+
     set({
       currentVehicle: config,
       projects,
@@ -318,11 +325,9 @@ export const useEVStore = create<EVStoreState>((set, get) => ({
     saveUserPreferences(newPrefs);
     set({ preferences: newPrefs });
     if (typeof document !== 'undefined') {
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+      document.documentElement.classList.remove('light', 'dark');
+      document.documentElement.classList.add(theme);
+      document.documentElement.style.colorScheme = theme;
     }
   },
 
@@ -336,6 +341,11 @@ export const useEVStore = create<EVStoreState>((set, get) => ({
     const newPrefs = { ...get().preferences, ...partial };
     saveUserPreferences(newPrefs);
     set({ preferences: newPrefs });
+    if (partial.theme && typeof document !== 'undefined') {
+      document.documentElement.classList.remove('light', 'dark');
+      document.documentElement.classList.add(partial.theme);
+      document.documentElement.style.colorScheme = partial.theme;
+    }
   },
 
   updatePreferences: (partial) => {

@@ -51,11 +51,13 @@ export function CycleSpeedChart({ timeSeries, cycleName }: CycleSpeedChartProps)
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#121824',
-                borderColor: '#24334E',
+                backgroundColor: 'var(--surface-100)',
+                borderColor: 'var(--border-color)',
                 borderRadius: '16px',
                 fontSize: '12px',
+                color: 'var(--foreground)',
               }}
+              itemStyle={{ color: 'var(--foreground)' }}
               formatter={(value: any, name: string) => [`${value} km/h`, name]}
               labelFormatter={(label) => `Time: ${label} s (${(Number(label) / 60).toFixed(1)} min)`}
             />
