@@ -131,23 +131,37 @@ export function simulateAcceleration(
       });
     }
 
-    // Split checkpoints
-    if (timeTo40 === null && vKmh >= 40) timeTo40 = Math.round(t * 10) / 10;
-    if (timeTo60 === null && vKmh >= 60) timeTo60 = Math.round(t * 10) / 10;
-    if (timeTo80 === null && vKmh >= 80) timeTo80 = Math.round(t * 10) / 10;
-    if (timeTo100 === null && vKmh >= 100) timeTo100 = Math.round(t * 10) / 10;
-    if (timeTo120 === null && vKmh >= 120) timeTo120 = Math.round(t * 10) / 10;
-
-    // Quarter-mile checkpoint (402.336m)
-    if (quarterMileTime === null && x >= 402.336) {
-      quarterMileTime = Math.round(t * 10) / 10;
-      quarterMileSpeedKmh = Math.round(vKmh * 10) / 10;
-    }
+    // Split checkpoints with linear interpolation for sub-millisecond precision
+    const prevV = v;
+    const prevVKmh = vKmh;
+    const prevT = t;
+    const prevX = x;
 
     // Advance state
     v += accelMs2 * dt;
     x += v * dt;
     t += dt;
+
+    const newVKmh = msToKmh(v);
+
+    const interpolateTime = (targetSpeed: number) => {
+      if (newVKmh === prevVKmh) return prevT;
+      const frac = (targetSpeed - prevVKmh) / (newVKmh - prevVKmh);
+      return Math.round((prevT + frac * dt) * 100) / 100;
+    };
+
+    if (timeTo40 === null && newVKmh >= 40) timeTo40 = interpolateTime(40);
+    if (timeTo60 === null && newVKmh >= 60) timeTo60 = interpolateTime(60);
+    if (timeTo80 === null && newVKmh >= 80) timeTo80 = interpolateTime(80);
+    if (timeTo100 === null && newVKmh >= 100) timeTo100 = interpolateTime(100);
+    if (timeTo120 === null && newVKmh >= 120) timeTo120 = interpolateTime(120);
+
+    // Quarter-mile checkpoint (402.336m)
+    if (quarterMileTime === null && x >= 402.336) {
+      const frac = (402.336 - prevX) / (x - prevX);
+      quarterMileTime = Math.round((prevT + frac * dt) * 100) / 100;
+      quarterMileSpeedKmh = Math.round((prevVKmh + frac * (newVKmh - prevVKmh)) * 10) / 10;
+    }
 
     if (accelMs2 < 0.05 && vKmh > 30) {
       // Vehicle has reached terminal speed

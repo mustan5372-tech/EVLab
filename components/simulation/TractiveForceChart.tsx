@@ -24,32 +24,37 @@ export function TractiveForceChart({ acceleration }: TractiveForceChartProps) {
   return (
     <Card elevated className="space-y-4">
       <CardHeader className="mb-1">
-        <div>
-          <CardTitle>Tractive & Resistive Forces vs Acceleration</CardTitle>
-          <CardDescription>
-            Forces acting on the vehicle: Wheel tractive effort vs quadratic aerodynamic drag & tire hysteresis.
-          </CardDescription>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <CardTitle>Tractive & Resistive Forces vs Acceleration</CardTitle>
+            <CardDescription>
+              Force equilibrium: Wheel propulsive force opposing quadratic aero drag & tire hysteresis.
+            </CardDescription>
+          </div>
         </div>
       </CardHeader>
 
-      <div className="h-72 w-full pt-2">
+      <div className="h-64 sm:h-72 lg:h-80 w-full pt-1">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#212D40" vertical={false} />
+          <LineChart data={data} margin={{ top: 12, right: 12, left: -12, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color, #212D40)" vertical={false} opacity={0.6} />
             <XAxis
               dataKey="timeS"
               tickFormatter={(v) => `${v}s`}
               stroke="#64748B"
               fontSize={11}
               tickLine={false}
+              axisLine={{ stroke: '#334155' }}
             />
             <YAxis
               yAxisId="force"
               stroke="#00D2FF"
               fontSize={11}
               tickLine={false}
+              axisLine={{ stroke: '#334155' }}
               unit=" N"
               domain={[0, 'auto']}
+              width={52}
             />
             <YAxis
               yAxisId="accel"
@@ -57,28 +62,30 @@ export function TractiveForceChart({ acceleration }: TractiveForceChartProps) {
               stroke="#10B981"
               fontSize={11}
               tickLine={false}
+              axisLine={{ stroke: '#334155' }}
               unit=" m/s²"
               domain={[0, 'auto']}
+              width={52}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: 'var(--surface-100)',
-                borderColor: 'var(--border-color)',
+                backgroundColor: 'rgba(15, 23, 42, 0.94)',
+                borderColor: 'rgba(0, 210, 255, 0.3)',
                 borderRadius: '16px',
                 fontSize: '12px',
-                color: 'var(--foreground)',
+                color: '#F8FAFC',
+                backdropFilter: 'blur(12px)',
+                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)',
               }}
-              itemStyle={{ color: 'var(--foreground)' }}
+              itemStyle={{ color: '#F8FAFC' }}
               formatter={(value: any, name: string) => {
-                if (name === 'Tractive Force') return [`${value} N`, name];
-                if (name === 'Aero Drag Force') return [`${value} N`, name];
-                if (name === 'Rolling Resistance') return [`${value} N`, name];
-                if (name === 'Acceleration') return [`${value} m/s²`, name];
-                return [value, name];
+                const num = Number(value);
+                if (name === 'Acceleration') return [`${num.toFixed(2)} m/s² (${(num / 9.80665).toFixed(2)} G)`, name];
+                return [`${num.toLocaleString()} N`, name];
               }}
-              labelFormatter={(label) => `Time: ${label} s`}
+              labelFormatter={(label) => `Time: ${Number(label).toFixed(2)} s`}
             />
-            <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
+            <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
             <Line
               yAxisId="force"
               type="monotone"
@@ -87,6 +94,7 @@ export function TractiveForceChart({ acceleration }: TractiveForceChartProps) {
               stroke="#00D2FF"
               strokeWidth={2.5}
               dot={false}
+              activeDot={{ r: 5, fill: '#00D2FF' }}
             />
             <Line
               yAxisId="force"

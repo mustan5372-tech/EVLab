@@ -39,47 +39,70 @@ export function GradeabilityChart({ gradeability }: GradeabilityChartProps) {
         </div>
       </CardHeader>
 
-      <div className="h-72 w-full pt-2">
+      <div className="h-64 sm:h-72 lg:h-80 w-full pt-1">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#212D40" vertical={false} />
+          <BarChart data={data} margin={{ top: 12, right: 12, left: -12, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color, #212D40)" vertical={false} opacity={0.6} />
             <XAxis
               dataKey="grade"
               stroke="#64748B"
               fontSize={11}
               tickLine={false}
+              axisLine={{ stroke: '#334155' }}
             />
             <YAxis
               yAxisId="speed"
               stroke="#A855F7"
               fontSize={11}
               tickLine={false}
+              axisLine={{ stroke: '#334155' }}
               unit=" km/h"
               domain={[0, 'auto']}
+              width={52}
+            />
+            <YAxis
+              yAxisId="power"
+              orientation="right"
+              stroke="#F59E0B"
+              fontSize={11}
+              tickLine={false}
+              axisLine={{ stroke: '#334155' }}
+              unit=" kW"
+              domain={[0, 'auto']}
+              width={50}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: 'var(--surface-100)',
-                borderColor: 'var(--border-color)',
+                backgroundColor: 'rgba(15, 23, 42, 0.94)',
+                borderColor: 'rgba(168, 85, 247, 0.3)',
                 borderRadius: '16px',
                 fontSize: '12px',
-                color: 'var(--foreground)',
+                color: '#F8FAFC',
+                backdropFilter: 'blur(12px)',
+                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)',
               }}
-              itemStyle={{ color: 'var(--foreground)' }}
+              itemStyle={{ color: '#F8FAFC' }}
               formatter={(value: any, name: string) => {
-                if (name === 'Max Climbing Speed') return [`${value} km/h`, name];
-                if (name === 'Power Demanded') return [`${value} kW`, name];
+                if (name === 'Max Climbing Speed') return [`${Number(value).toFixed(1)} km/h`, name];
+                if (name === 'Power Demanded') return [`${Number(value).toFixed(1)} kW`, name];
                 return [value, name];
               }}
-              labelFormatter={(label) => `Road Incline Grade: ${label}`}
+              labelFormatter={(label) => `Road Gradient: ${label}`}
             />
-            <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
+            <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
             <Bar
               yAxisId="speed"
               dataKey="maxSpeedKmh"
               name="Max Climbing Speed"
               fill="#A855F7"
-              radius={[8, 8, 0, 0]}
+              radius={[6, 6, 0, 0]}
+            />
+            <Bar
+              yAxisId="power"
+              dataKey="requiredPowerKw"
+              name="Power Demanded"
+              fill="#F59E0B"
+              radius={[6, 6, 0, 0]}
             />
           </BarChart>
         </ResponsiveContainer>

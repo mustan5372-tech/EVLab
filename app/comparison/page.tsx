@@ -81,31 +81,89 @@ export default function ComparisonPage() {
     });
   }, [activeComparisons]);
 
-  // Bar chart data preparation
-  const chartData = [
-    {
-      metric: '0–100 km/h (s)',
-      ...Object.fromEntries(comparisonData.map((d) => [d.vehicle.name, d.accelTime100 || 0])),
-    },
-    {
-      metric: 'Top Speed (km/h)',
-      ...Object.fromEntries(comparisonData.map((d) => [d.vehicle.name, d.topSpeedKmh])),
-    },
-    {
-      metric: 'Range @ 90km/h (km)',
-      ...Object.fromEntries(comparisonData.map((d) => [d.vehicle.name, d.range90Kmh])),
-    },
-    {
-      metric: 'Consumption (Wh/km)',
-      ...Object.fromEntries(comparisonData.map((d) => [d.vehicle.name, d.consumptionWhKm])),
-    },
-    {
-      metric: 'Max Grade (%)',
-      ...Object.fromEntries(comparisonData.map((d) => [d.vehicle.name, d.maxGrade])),
-    },
-  ];
+  const [selectedMetric, setSelectedMetric] = React.useState<string>('accel');
 
   const barColors = ['#00D2FF', '#A855F7', '#10B981', '#F59E0B'];
+
+  // Metrics definitions for precise per-metric visualization
+  const metricsMeta: Record<string, { label: string; unit: string; higherIsBetter: boolean }> = {
+    accel: { label: '0–100 km/h Acceleration', unit: ' s', higherIsBetter: false },
+    topSpeed: { label: 'Top Speed', unit: ' km/h', higherIsBetter: true },
+    range: { label: 'Range @ 90 km/h', unit: ' km', higherIsBetter: true },
+    consumption: { label: 'Energy Consumption', unit: ' Wh/km', higherIsBetter: false },
+    grade: { label: 'Max Incline Gradeability', unit: '%', higherIsBetter: true },
+    normalized: { label: 'Overall Normalized Efficiency Score', unit: '%', higherIsBetter: true },
+  };
+
+  // Dedicated single-metric comparative data (vehicles on X axis)
+  const singleMetricData = comparisonData.map((d, idx) => {
+    let val = 0;
+    if (selectedMetric === 'accel') val = d.accelTime100 || 0;
+    else if (selectedMetric === 'topSpeed') val = d.topSpeedKmh;
+    else if (selectedMetric === 'range') val = d.range90Kmh;
+    else if (selectedMetric === 'consumption') val = d.consumptionWhKm;
+    else if (selectedMetric === 'grade') val = d.maxGrade;
+
+    return {
+      name: d.vehicle.name,
+      value: val,
+      color: barColors[idx % barColors.length],
+    };
+  });
+
+  // Normalized (0-100%) multi-metric benchmark data
+  const normalizedData = [
+    {
+      metric: '0–100 km/h (Fastest = 100%)',
+      ...Object.fromEntries(
+        comparisonData.map((d) => {
+          const minVal = Math.min(...comparisonData.map((c) => c.accelTime100 || 99));
+          const score = d.accelTime100 ? Math.round((minVal / d.accelTime100) * 100) : 0;
+          return [d.vehicle.name, score];
+        })
+      ),
+    },
+    {
+      metric: 'Top Speed (Highest = 100%)',
+      ...Object.fromEntries(
+        comparisonData.map((d) => {
+          const maxVal = Math.max(...comparisonData.map((c) => c.topSpeedKmh));
+          const score = Math.round((d.topSpeedKmh / maxVal) * 100);
+          return [d.vehicle.name, score];
+        })
+      ),
+    },
+    {
+      metric: 'Range @ 90km/h (Longest = 100%)',
+      ...Object.fromEntries(
+        comparisonData.map((d) => {
+          const maxVal = Math.max(...comparisonData.map((c) => c.range90Kmh));
+          const score = Math.round((d.range90Kmh / maxVal) * 100);
+          return [d.vehicle.name, score];
+        })
+      ),
+    },
+    {
+      metric: 'Efficiency (Lowest Wh/km = 100%)',
+      ...Object.fromEntries(
+        comparisonData.map((d) => {
+          const minVal = Math.min(...comparisonData.map((c) => c.consumptionWhKm));
+          const score = Math.round((minVal / d.consumptionWhKm) * 100);
+          return [d.vehicle.name, score];
+        })
+      ),
+    },
+    {
+      metric: 'Gradeability (Steepest = 100%)',
+      ...Object.fromEntries(
+        comparisonData.map((d) => {
+          const maxVal = Math.max(...comparisonData.map((c) => c.maxGrade));
+          const score = Math.round((d.maxGrade / maxVal) * 100);
+          return [d.vehicle.name, score];
+        })
+      ),
+    },
+  ];
 
   return (
     <AppShell>
@@ -149,7 +207,7 @@ export default function ComparisonPage() {
         </div>
 
         {/* Quick Add Presets Bar */}
-        <div className="p-4 rounded-3xl bg-surface-100 border border-border flex items-center justify-between gap-3 flex-wrap">
+        <div className="p-3.5 sm:p-4 rounded-3xl bg-surface-100 border border-border flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-foreground">Add to Comparison:</span>
             <span className="text-[11px] text-slate-400">
@@ -186,43 +244,106 @@ export default function ComparisonPage() {
           </div>
         </div>
 
-        {/* Comparative Bar Chart */}
+        {/* Comparative Chart with Metric Switcher */}
         <Card elevated className="space-y-4">
           <CardHeader className="mb-1">
-            <div>
-              <CardTitle>Comparative Performance Benchmarks</CardTitle>
-              <CardDescription>
-                Direct quantitative comparison across acceleration, velocity, range, consumption, and gradeability.
-              </CardDescription>
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+              <div>
+                <CardTitle>Comparative Performance Benchmarks</CardTitle>
+                <CardDescription>
+                  {metricsMeta[selectedMetric]?.label}: Dedicated scaling and high-precision evaluation.
+                </CardDescription>
+              </div>
+
+              {/* Metric Switcher Pills */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full scrollbar-none text-[11px] font-semibold">
+                {[
+                  { id: 'accel', label: '0–100 km/h' },
+                  { id: 'topSpeed', label: 'Top Speed' },
+                  { id: 'range', label: 'Range' },
+                  { id: 'consumption', label: 'Consumption' },
+                  { id: 'grade', label: 'Gradeability' },
+                  { id: 'normalized', label: 'Normalized %' },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setSelectedMetric(tab.id)}
+                    className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all ${
+                      selectedMetric === tab.id
+                        ? 'bg-electric-500 text-slate-950 font-bold shadow-glow'
+                        : 'bg-surface-200 border border-border text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </CardHeader>
 
-          <div className="h-80 w-full pt-2">
+          <div className="h-64 sm:h-72 lg:h-80 w-full pt-1">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#212D40" vertical={false} />
-                <XAxis dataKey="metric" stroke="#64748B" fontSize={11} tickLine={false} />
-                <YAxis stroke="#64748B" fontSize={11} tickLine={false} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'var(--surface-100)',
-                    borderColor: 'var(--border-color)',
-                    borderRadius: '16px',
-                    fontSize: '12px',
-                    color: 'var(--foreground)',
-                  }}
-                  itemStyle={{ color: 'var(--foreground)' }}
-                />
-                <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
-                {comparisonData.map((d, idx) => (
-                  <Bar
-                    key={d.vehicle.id}
-                    dataKey={d.vehicle.name}
-                    fill={barColors[idx % barColors.length]}
-                    radius={[6, 6, 0, 0]}
+              {selectedMetric === 'normalized' ? (
+                <BarChart data={normalizedData} margin={{ top: 12, right: 12, left: -12, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color, #212D40)" vertical={false} opacity={0.6} />
+                  <XAxis dataKey="metric" stroke="#64748B" fontSize={11} tickLine={false} axisLine={{ stroke: '#334155' }} />
+                  <YAxis stroke="#64748B" fontSize={11} tickLine={false} axisLine={{ stroke: '#334155' }} unit="%" domain={[0, 100]} width={48} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'rgba(15, 23, 42, 0.94)',
+                      borderColor: 'rgba(0, 210, 255, 0.3)',
+                      borderRadius: '16px',
+                      fontSize: '12px',
+                      color: '#F8FAFC',
+                      backdropFilter: 'blur(12px)',
+                    }}
+                    itemStyle={{ color: '#F8FAFC' }}
+                    formatter={(val: any) => [`${val}% of benchmark`, 'Relative Score']}
                   />
-                ))}
-              </BarChart>
+                  <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
+                  {comparisonData.map((d, idx) => (
+                    <Bar
+                      key={d.vehicle.id}
+                      dataKey={d.vehicle.name}
+                      fill={barColors[idx % barColors.length]}
+                      radius={[6, 6, 0, 0]}
+                    />
+                  ))}
+                </BarChart>
+              ) : (
+                <BarChart data={singleMetricData} margin={{ top: 12, right: 12, left: -12, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color, #212D40)" vertical={false} opacity={0.6} />
+                  <XAxis dataKey="name" stroke="#64748B" fontSize={11} tickLine={false} axisLine={{ stroke: '#334155' }} />
+                  <YAxis
+                    stroke="#64748B"
+                    fontSize={11}
+                    tickLine={false}
+                    axisLine={{ stroke: '#334155' }}
+                    unit={metricsMeta[selectedMetric]?.unit}
+                    domain={[0, 'auto']}
+                    width={52}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'rgba(15, 23, 42, 0.94)',
+                      borderColor: 'rgba(0, 210, 255, 0.3)',
+                      borderRadius: '16px',
+                      fontSize: '12px',
+                      color: '#F8FAFC',
+                      backdropFilter: 'blur(12px)',
+                    }}
+                    itemStyle={{ color: '#F8FAFC' }}
+                    formatter={(val: any) => [`${val}${metricsMeta[selectedMetric]?.unit}`, metricsMeta[selectedMetric]?.label]}
+                  />
+                  <Bar
+                    dataKey="value"
+                    name={metricsMeta[selectedMetric]?.label}
+                    radius={[8, 8, 0, 0]}
+                    fill="#00D2FF"
+                  />
+                </BarChart>
+              )}
             </ResponsiveContainer>
           </div>
         </Card>

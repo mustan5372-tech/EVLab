@@ -36,7 +36,7 @@ export function Slider({
         </div>
       </div>
 
-      <div className="relative flex items-center py-1">
+      <div className="relative flex items-center py-2 touch-none">
         <input
           type="range"
           min={min}
@@ -44,7 +44,7 @@ export function Slider({
           step={step}
           value={value}
           onChange={(e) => onChange(parseFloat(e.target.value))}
-          className="w-full h-2 rounded-full appearance-none cursor-pointer accent-electric-400 focus:outline-none"
+          className="w-full h-3 rounded-full appearance-none cursor-pointer accent-electric-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric-400/50 touch-manipulation"
           style={{
             background: `linear-gradient(to right, #00D2FF 0%, #00D2FF ${percentage}%, var(--surface-300) ${percentage}%, var(--surface-300) 100%)`,
           }}
